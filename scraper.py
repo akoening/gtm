@@ -1,5 +1,6 @@
 import requests
 import sys
+from get_apis import get_apis
 from bs4 import BeautifulSoup
 
 
@@ -41,17 +42,14 @@ def parse_response(resp: str):
     return tags
 
 
-def get_apis():
-    pass
-
-
 if __name__ == "__main__":
     #args = sys.argv
     #url = args[1]
-    url = 'http://marketingisbs.marketing'
+    url = 'http://marketingisbs.marketing/page2.html'
     response = make_request(url)
     if using_gtags(response):
         tags = parse_response(response)
-
-    # add lots of custom tags
-    # look for those tag elements in page resources being downloaded on page initialization
+        print(f"Tag data:{tags}")
+        get_apis(url)
+    else:
+        print("Google tags not detected")

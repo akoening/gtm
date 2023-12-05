@@ -30,7 +30,7 @@ def get_apis(url):
     driver = webdriver.Chrome(service=service, options=options)
 
     # Send a request to the website and let it load 
-    driver.get("url") 
+    driver.get(url) 
   
     # Sleeps for 10 seconds 
     time.sleep(10) 

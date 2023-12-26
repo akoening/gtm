@@ -1,14 +1,17 @@
 
 
 from selenium import webdriver 
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities 
 import time 
 import json
 from selenium.webdriver.chrome.service import Service
 
-  
-# Main Function 
+
 def get_apis(url):
+    """
+        Makes request to passed-in URL with Selenium and Chrome Driver
+        then accesses performance logs to parse out logged network requests 
+        and saves them to a JSON file. 
+    """
   
     # Create the webdriver object and pass the arguments 
     options = webdriver.ChromeOptions() 
@@ -59,9 +62,18 @@ def get_apis(url):
   
     print("Quitting Selenium WebDriver") 
     driver.quit() 
-  
-    # Read the JSON File and parse it using 
-    # json.loads() to find the urls containing Google Tag requests. 
+
+    # Call helper function to read network_logs file and parse out gtag requests
+    get_gtag_requests()
+
+def get_gtag_requests():
+    """
+        Read the JSON File and parse it using 
+        json.loads() to find the urls containing Google Tag requests. 
+        Write the whole request to a json file.
+    """
+
+    # Read in network log file created in function above 
     json_file_path = "network_log.json"
     with open(json_file_path, "r", encoding="utf-8") as f: 
         logs = json.loads(f.read()) 
@@ -73,10 +85,10 @@ def get_apis(url):
         for log in logs: 
             # Except block will be accessed if any of the 
             # following keys are missing. 
-        
                 try: 
                     # URL is present inside the following keys 
                     url = log["params"]["request"]["url"] 
+                    # If network request is calling gtm.js
                     if url.__contains__("gtm"):
                         gtag = log["params"]
                         g.write(json.dumps(gtag)+",")

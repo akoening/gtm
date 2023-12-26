@@ -1,6 +1,5 @@
 
 
-# Import the required modules 
 from selenium import webdriver 
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities 
 import time 
@@ -62,19 +61,25 @@ def get_apis(url):
     driver.quit() 
   
     # Read the JSON File and parse it using 
-    # json.loads() to find the urls containing images. 
+    # json.loads() to find the urls containing Google Tag requests. 
     json_file_path = "network_log.json"
     with open(json_file_path, "r", encoding="utf-8") as f: 
         logs = json.loads(f.read()) 
   
-    # Iterate the logs 
-    for log in logs: 
-  
-        # Except block will be accessed if any of the 
-        # following keys are missing. 
-        try: 
-            # URL is present inside the following keys 
-            url = log["params"]["request"]["url"] 
-            print(url, end='\n\n') 
-        except Exception as e: 
-            pass
+    gtag = ''
+    with open("gtag_requests.json", "w", encoding="utf-8") as g: 
+        g.write("[") 
+        # Iterate the logs 
+        for log in logs: 
+            # Except block will be accessed if any of the 
+            # following keys are missing. 
+        
+                try: 
+                    # URL is present inside the following keys 
+                    url = log["params"]["request"]["url"] 
+                    if url.__contains__("gtm"):
+                        gtag = log["params"]
+                        g.write(json.dumps(gtag)+",")
+                except Exception as e: 
+                    pass
+        g.write("{}]") 

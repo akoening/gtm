@@ -1,9 +1,13 @@
 import json
 from urllib.parse import urlparse, parse_qsl
 
+# add a tag to the site that does something obvious like an alert that includes a unique string
+
 def parse_gtag_reqs() -> list:
     with open("gtag_requests.json", "r", encoding="utf-8") as f:
         tags = json.loads(f.read())
+
+    print(tags[1])
     
     return tags
 
